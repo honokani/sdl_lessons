@@ -11,5 +11,7 @@
       +  I implemented it very simplely.  
    *  lesson02  
       +  I split some modules into function.  
+   *  lesson03  
+      +  I separate some modules as SDL2Utils.  
 
 
