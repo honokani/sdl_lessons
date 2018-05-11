@@ -20,7 +20,8 @@ lesson02 = sdlBegin ("Lesson02!!", (320, 240)) sdlAction where
         SDL.surfaceBlit image Nothing screen Nothing
         SDL.updateWindowSurface w
         SDL.delay 2000
-        -- free screen
+        -- free sources
+        SDL.freeSurface image
         SDL.freeSurface screen
 
 
