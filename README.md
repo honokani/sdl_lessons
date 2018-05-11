@@ -7,5 +7,9 @@
    Maybe.  
 
 # memo  
-   * Nothing now.  
+   *  lesson01  
+      +  I implemented it very simplely.  
+   *  lesson02  
+      +  I split some modules into function.  
+
 
