@@ -23,6 +23,7 @@ lesson01 = do
     SDL.surfaceFillRect screen Nothing $ SDL.V4 0x00 0x00 0x00 0x00
     SDL.updateWindowSurface w
     SDL.delay 2000
+    SDL.freeSurface screen
 
 
     --desrtoy window
