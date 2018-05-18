@@ -13,5 +13,7 @@
       +  I split some modules into function.  
    *  lesson03  
       +  I separate some modules as SDL2Utils.  
-
+   *  lesson04  
+      +  I made effection by tapping direction key.  
+      +  TODO : separate key control modules.  
 
