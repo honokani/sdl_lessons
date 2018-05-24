@@ -22,7 +22,8 @@ sdlAction w = do
     imgFixed <- SDL.convertSurface img sfcFormat
 
     -- do something
-    draw w sfc imgFixed
+    -- draw w sfc imgFixed
+    drawTest w sfc img
     SDL_U.runUntil_pushX (SDL.delay 100)
 
     -- free sources
@@ -33,3 +34,7 @@ draw w sfc img = do
     SDL.surfaceBlitScaled img Nothing sfc Nothing
     SDL.updateWindowSurface w
 
+drawTest :: SDL.Window -> SDL.Surface -> SDL.Surface -> IO ()
+drawTest w sfc img = do
+    SDL.surfaceBlitScaled img Nothing sfc Nothing
+    SDL.updateWindowSurface w
