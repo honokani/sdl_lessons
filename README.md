@@ -16,4 +16,7 @@
    *  lesson04  
       +  I made effection by tapping direction key.  
       +  TODO : separate key control modules.  
+   *  lesson05  
+      +  'SDL.surfaceBlit' is different from 'SDL.surfaceBlitScaled'.  
+         this is complex to use I think. i dont like it 'へ`  
 
