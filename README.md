@@ -28,7 +28,7 @@
 
          | with Format | Blit | BlitScaled |  
          |:-:|:-:|:-:|  
-         | no | row size | stretched, slow |  
+         | no | raw size | stretched, slow |  
          | yes | (needless) | stretched, fast |  
 
          maybe.  
