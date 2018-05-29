@@ -31,5 +31,8 @@
          | no | raw size | stretched, slow |  
          | yes | (needless) | stretched, fast |  
 
-         maybe.  
+   *  lesson06  
+      +  skip this lesson and recover in l07.  
 
+   *  lesson07  
+      +  I use render and texture.  
