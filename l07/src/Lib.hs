@@ -4,8 +4,8 @@ module Lib
     ( lesson07
     ) where
 
-import qualified SDL
 import           SDL                (($=))
+import qualified SDL
 import qualified SDL.Image as SDL_I
 
 import qualified SdlUtils  as SDL_U
@@ -30,9 +30,9 @@ sdlAction w = do
 
 draw :: SDL.Renderer -> SDL.Texture -> IO ()
 draw r t = do
-  SDL.clear r
-  SDL.copy r t Nothing Nothing
-  SDL.present r
+    SDL.clear r
+    SDL.copy r t Nothing Nothing
+    SDL.present r
 
 
 useRenderer :: SDL.Window -> (SDL.Renderer -> IO a) -> IO ()
