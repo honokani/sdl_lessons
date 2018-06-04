@@ -1,7 +1,7 @@
 # solving SDL2 lessons  
 
    Problems in [here](http://lazyfoo.net/tutorials/SDL/).  
-   With great help by [this repository](https://github.com/palf/haskell-sdl2-examples).  
+   With great help by [thi repository](https://github.com/haskell-game/sdl2/blob/master/examples/lazyfoo) or [this one](https://github.com/palf/haskell-sdl2-examples).  
 
 # policy  
 
@@ -36,3 +36,8 @@
 
    *  lesson07  
       +  I use render and texture.  
+
+   *  lesson08  
+      +  `SDL.clear` means *Fill randerer with color which you choose*.  
+      +  
+
