@@ -56,6 +56,7 @@ setColor ren (RGBA r g b a) = SDL.rendererDrawColor ren $= SDL.V4 r g b a
 
 draw :: SDL.Renderer -> IO ()
 draw r = do
+    SDL.delay 1
     clearCanvas r
     setColor r red >> fillRect r shapeR1
     SDL.present r
