@@ -38,3 +38,4 @@ drawTest :: SDL.Window -> SDL.Surface -> SDL.Surface -> IO ()
 drawTest w sfc img = do
     SDL.surfaceBlitScaled img Nothing sfc Nothing
     SDL.updateWindowSurface w
+

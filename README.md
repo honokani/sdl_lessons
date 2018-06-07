@@ -39,5 +39,16 @@
 
    *  lesson08  
       +  `SDL.clear` means *Fill randerer with color which you choose*.  
-      +  
+
+   *  lesson09  
+      +  `SDL.RenderScaleQuality` is hint of scaling quality.  
+         1. ScaleNearest : Nearest pixel sampling (default)  
+         1. ScaleLinear : linear filtering (supported by OpenGL and Direct3D)  
+         1. ScaleBest : Anisotropic filtering (supported by Direct3D)  
+
+      +  `viewport`  
+         -  Initial viewport is full area of canvas.  
+            If change vp in loop, initial vp of 2nd loop has remained changed.  
+            So, we should set vp first in loop.  
+
 

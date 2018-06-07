@@ -24,6 +24,11 @@ dependencies:
 
 library:
   source-dirs: src
+  dependencies:
+  - text
+  - sdl2
+  - sdl2-image
+  - extra
 
 executables:
   l09-exe:
