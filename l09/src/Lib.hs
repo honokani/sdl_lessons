@@ -45,6 +45,7 @@ sdlAction w = do
     useRenderer w $ \r -> do
         t <- SDL_I.loadTexture r $ hello smap
         SDL_U.runUntil_pushX $ draw r t
+        SDL.destroyTexture t
 
 
 -- renderer config AND set use functions
