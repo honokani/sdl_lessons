@@ -51,4 +51,8 @@
             If change vp in loop, initial vp of 2nd loop has remained changed.  
             So, we should set vp first in loop.  
 
+   *  lesson10  
+      +  `XLGBadRenderRequest`  
+         -  When I use 8bit and 32bit png instead of 24bit, I got this ERROR at `SDL.copy`.  
+         -  Both 8bit and 32bit png have alpha channel.  
 
