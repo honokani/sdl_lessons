@@ -7,6 +7,8 @@ module SdlUtils_Figure
     , fillArea
     , loadTextures
     , destroyTextures
+    , loadTextureWithCKey
+    , loadTexturesWithCKey
     , Color(..)
     ) where
 
@@ -19,8 +21,9 @@ import qualified Data.Word       as W
 -- color control
 data Color = RGBA W.Word8 W.Word8 W.Word8 W.Word8
              deriving (Show, Eq)
+color2V4 (RGBA r g b a) = SDL.V4 r g b a
 setColor :: SDL.Renderer -> Color -> IO ()
-setColor ren (RGBA r g b a) = SDL.rendererDrawColor ren $= SDL.V4 r g b a
+setColor ren c = SDL.rendererDrawColor ren $= color2V4 c
 
 -- canvas control
 clearCanvas :: SDL.Renderer -> IO ()
@@ -49,4 +52,19 @@ loadTextures r = mapM (SDL_I.loadTexture r)
 
 destroyTextures :: (Traversable m) => m SDL.Texture -> IO ()
 destroyTextures = mapM_ SDL.destroyTexture
+
+loadSurfaces :: (Traversable m) => m FilePath -> IO (m SDL.Surface)
+loadSurfaces = mapM SDL_I.load
+
+
+loadTextureWithCKey :: SDL.Renderer -> Color -> FilePath -> IO (SDL.Texture)
+loadTextureWithCKey r key fp = do
+    sfc <- SDL_I.load fp
+    SDL.surfaceColorKey sfc $= (Just $ color2V4 key)
+    SDL.createTextureFromSurface r sfc
+
+loadTexturesWithCKey :: (Traversable m) => SDL.Renderer -> Color -> m FilePath -> IO (m SDL.Texture)
+loadTexturesWithCKey r k fps = do
+    mapM (loadTextureWithCKey r k) fps
+
 

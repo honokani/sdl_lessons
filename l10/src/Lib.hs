@@ -29,12 +29,14 @@ windowSetting :: (Text, (CInt, CInt))
 windowSetting = (windowT, windowSz)
 
 -- Image containers
-data SurfaceMap a = SFMap { clear08 :: a
-                          , cyan24  :: a
+data SurfaceMap a = SFMap { hello    :: a
+                          , clear08  :: a
+                          , cyan24   :: a
                           , clear32  :: a
                           } deriving (Show, Functor, Foldable, Traversable)
 sfmap :: SurfaceMap FilePath
-sfmap = SFMap { clear08 = "./pics/clear_08.png"
+sfmap = SFMap { hello   = "./pics/hello_world.png"
+              , clear08 = "./pics/clear_08.png"
               , cyan24  = "./pics/cyan_24.png"
               , clear32 = "./pics/clear_32.png"
               }
@@ -48,8 +50,8 @@ lesson10 = do
 sdlAction :: SDL.Window -> IO ()
 sdlAction w = do
     useRenderer w $ \r -> do
-        --t <- SDL_I.loadTexture r $ cyan24 sfMap
-        ts <- SDL_F.loadTextures r sfmap
+        --ts <- SDL_F.loadTextures r sfmap
+        ts <- SDL_F.loadTexturesWithCKey r cyn sfmap
         SDL_U.runUntil_pushX $ draw r ts
         SDL_F.destroyTextures ts
 
@@ -75,6 +77,8 @@ blu :: SDL_F.Color
 blu = SDL_F.RGBA   0   0 255 255
 blc :: SDL_F.Color
 blc = SDL_F.RGBA   0   0   0 255
+cyn :: SDL_F.Color
+cyn = SDL_F.RGBA   0 255 255 255
 
 
 -- core action
@@ -85,19 +89,26 @@ draw r ts = do
 
     -- topLeft and topRight
     SDL_F.setViewport r full
+    SDL_F.fillArea r grn full
     SDL_F.fillArea r red topL
     SDL_F.fillArea r blu topR
     -- bottom
     SDL_F.setViewport r bot
+    SDL_F.pasteTexture r $ hello ts
+    -- center
+    SDL_F.setViewport r ctr
     SDL_F.pasteTexture r $ cyan24 ts
 
     -- end
     SDL.present r
     where
-        winMidH = div windowH 2
-        winMidW = div windowW 2
+        halfWinH = div windowH 2
+        halfWinW = div windowW 2
+        quoWinWH = div halfWinH 2
+        quoWinWW = div halfWinW 2
         full = SDL_F.mkRect 0 0 windowW windowH
-        topL = SDL_F.mkRect 0 0 winMidW winMidH
-        topR = SDL_F.mkRect winMidW 0 winMidW winMidH
-        bot  = SDL_F.mkRect 0 winMidH windowW winMidH
+        topL = SDL_F.mkRect 0 0 halfWinW halfWinH
+        topR = SDL_F.mkRect halfWinW 0 halfWinW halfWinH
+        bot  = SDL_F.mkRect 0 halfWinH windowW halfWinH
+        ctr  = SDL_F.mkRect quoWinWW quoWinWH halfWinW halfWinH
 
