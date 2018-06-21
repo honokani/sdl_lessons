@@ -6,7 +6,7 @@
 # about this repository  
 
    Surely, the library `{lesson dir}/Src/SdlUtils*.hs` in each lesson gets better step by step.  
-   `lesson 01 'is the most noobish, and the latest one is the best :)  
+   `lesson 01` is the most noobish, and the latest one is the best :)  
 
 # policy  
 
