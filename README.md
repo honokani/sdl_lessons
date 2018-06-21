@@ -3,6 +3,11 @@
    Problems in [here](http://lazyfoo.net/tutorials/SDL/).  
    With great help by [thi repository](https://github.com/haskell-game/sdl2/blob/master/examples/lazyfoo) or [this one](https://github.com/palf/haskell-sdl2-examples).  
 
+# about this repository  
+
+   Surely, the library `{lesson dir}/Src/SdlUtils*.hs` in each lesson gets better step by step.  
+   `lesson 01 'is the most noobish, and the latest one is the best :)  
+
 # policy  
 
    I solve lessons with haskell.  
