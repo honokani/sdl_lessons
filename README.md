@@ -57,7 +57,9 @@
             So, we should set vp first in loop.  
 
    *  lesson10  
-      +  `XLGBadRenderRequest`  
-         -  When I use 8bit and 32bit png instead of 24bit, I got this ERROR at `SDL.copy`.  
+      +  Error : `XLGBadRenderRequest`  
+         -  --When I use 8bit and 32bit png instead of 24bit, I got this ERROR at `SDL.copy`.--  
+            Error occured because of using Ubuntu 14 on Azure VM.  
+      + png  
          -  Both 8bit and 32bit png have alpha channel.  
 
