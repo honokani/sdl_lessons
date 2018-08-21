@@ -9,24 +9,27 @@ module Lib
 
 import           Foreign.C.Types                  (CInt)
 -- my module
-import qualified LoadInfo                   as LI
+import qualified LoadInfos                  as LI
+import qualified ErrorMessages              as EM
 
 
 -- source file path
 windowInfoPath :: String
 windowInfoPath = "./ress/window_info.json"
 
-
-err_WindowInfo_NotFound :: IO ()
-err_WindowInfo_NotFound = print "Check json of window infomation."
-
 -- window start.
 lesson11 :: IO ()
 lesson11 = do
-    jWinInfo <- LI.loadWindowInfo windowInfoPath
-    case jWinInfo of
-        Nothing   -> err_WindowInfo_NotFound
+    jsonWinInfo <- LI.loadWindowInfo windowInfoPath
+    case LI.loadWindowInfo windowInfoPath of
+        Nothing   -> EM.putMsg EM.WindowInfo_NotFound
         Just info -> do
-            print info
-            --SDL_U.begin info sdlAction
+            SDL_U.begin (LI.restructWindowInfo info) sdlAction
+
+sdlAction :: SDL.Window -> IO ()
+sdlAction w = do
+    useRenderer w $ \r -> do
+        ts <- SDL_F.loadTexturesWithCKey r cyn sfmap
+        SDL_U.runUntil_pushX $ draw r ts
+        SDL_F.destroyTextures ts
 

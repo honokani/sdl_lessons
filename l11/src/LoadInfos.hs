@@ -1,8 +1,9 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module LoadInfo
+module LoadInfos
     ( loadWindowInfo
+    , restructWindowInfo
     ) where
 
 import           Foreign.C.Types            (CInt)
