@@ -14,6 +14,14 @@ import qualified ErrorMessages              as EM
 
 
 -- source file path
+data InfoPaths = IPs { window  :: String
+                     , picTips :: String
+                     } deriving (Show)
+infoPaths :: InfoPaths
+infoPaths = IPs { window  = "./ress/window_info.json"
+                , picTips = "./ress/pics_tips_info.json"
+                }
+
 windowInfoPath :: String
 windowInfoPath = "./ress/window_info.json"
 
@@ -21,7 +29,7 @@ windowInfoPath = "./ress/window_info.json"
 lesson11 :: IO ()
 lesson11 = do
     jsonWinInfo <- LI.loadWindowInfo windowInfoPath
-    case LI.loadWindowInfo windowInfoPath of
+    case jsonWinInfo of
         Nothing   -> EM.putMsg EM.WindowInfo_NotFound
         Just info -> do
             SDL_U.begin (LI.restructWindowInfo info) sdlAction
