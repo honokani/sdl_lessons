@@ -1,0 +1,28 @@
+{"tips" : { "alpha" : "cyan"
+          , "contents": [ { "red" : { "start_x" : 0
+                                    , "start_y" : 0
+                                    , "size_y" : 100
+                                    , "size_y" : 100
+                                    }
+                          , "yellow" : { "start_x" : 0
+                                       , "start_y" : 0
+                                       , "size_y" : 100
+                                       , "size_y" : 100
+                                       }
+                          }
+                          , "green" : { "start_x" : 0
+                                      , "start_y" : 0
+                                      , "size_y" : 100
+                                      , "size_y" : 100
+                                      }
+                          }
+                          , "yellow" : { "start_x" : 0
+                                       , "start_y" : 0
+                                       , "size_y" : 100
+                                       , "size_y" : 100
+                                       }
+                          }
+                        ]
+          }
+}
+
