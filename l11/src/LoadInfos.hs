@@ -10,6 +10,7 @@ import           Foreign.C.Types            (CInt)
 import           Data.ByteString.Lazy.Char8 (pack)
 import           Data.Aeson                 (decode)
 import           Data.Aeson.TH              (deriveJSON, defaultOptions, Options(..))
+import qualified Data.Text                  as T (pack, Text)
 
 data WindowInfo = WinInfo { winTitle :: String
                           , winSizeW :: Int
@@ -22,10 +23,10 @@ loadWindowInfo path = do
     fWinInfo <- readFile path
     return.decode.pack $ fWinInfo
 
-restructWindowInfo :: WindowInfo -> (String,(CInt,CInt))
+restructWindowInfo :: WindowInfo -> (T.Text,(CInt,CInt))
 restructWindowInfo info = (t,(w,h))
     where
-        t = winTitle info
+        t = T.pack $ winTitle info
         w = fromIntegral.winSizeW $ info
         h = fromIntegral.winSizeH $ info
 

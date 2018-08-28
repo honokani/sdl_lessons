@@ -1,7 +1,7 @@
 module SdlUtils
     ( begin
     , renderSurface
-    , runUntil_pushX
+    , runUntil_X
     ) where
 
 import           Control.Monad
@@ -52,8 +52,8 @@ renderSurface w sfc img = do
 
 
 -- Close window control
-runUntil_pushX :: IO () -> IO ()
-runUntil_pushX action = whileM $
+runUntil_X :: IO () -> IO ()
+runUntil_X action = whileM $
     checkLiving <$> SDL.pollEvent >>= continueUntilGetFalse action
 
 continueUntilGetFalse :: IO () -> Bool -> IO Bool

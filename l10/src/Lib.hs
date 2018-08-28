@@ -102,7 +102,7 @@ draw r ts = do
     -- end
     SDL.present r
     where
-        halfWinH = div windowH 2
+        halfWinH = div windowH  2
         halfWinW = div windowW 2
         quoWinWH = div halfWinH 2
         quoWinWW = div halfWinW 2
