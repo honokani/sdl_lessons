@@ -7,38 +7,43 @@ module Lib
     ( lesson11
     ) where
 
-import           Foreign.C.Types                  (CInt)
+-- for sdl
+import           Foreign.C.Types                (CInt)
 import qualified SDL
+-- common
+--import qualified System.FilePath.Posix as SFP
 -- my module
-import qualified SdlUtils        as SDL_U
-import qualified SdlUtils_Figure as SDL_F
-import qualified LoadInfos                  as LI
-import qualified ErrorMessages              as EM
+import qualified SdlUtils              as SDL_U
+import qualified SdlUtils_Figure       as SDL_F
+import qualified LoadInfos             as LI
+import qualified LoadPics              as LP
+import qualified ErrorMessages         as EM
 
 
 -- source file path
-data InfoPaths a = IPs { window  :: a
-                       , picTips :: a
-                       } deriving (Show)
-infoPaths :: InfoPaths String
-infoPaths = IPs { window  = "./ress/window_info.json"
-                , picTips = "pics_tips_info.json"
-                }
---structInfoPath p n = 
---infoPaths = mapM () infoNames
---
---
---data SurfaceMap a = SF_Map { tips     :: a
---                           } deriving (Show, Functor, Foldable, Traversable)
---sfmap :: SurfaceMap FilePath
---sfmap = pure 
-
+data InfoDatas a = IData { window  :: a
+                         , picTips :: a
+                         , picTips1 :: a
+                         , picTips2 :: a
+                         , story :: a
+                         } deriving (Show)
+type FileName = String
+infoNames :: InfoDatas FileName
+infoNames = IData { window  = "./ress/window_info.json"
+                  , picTips = "./ress/pics_tips_info.json"
+                  , picTips1 = "./ress/pics_tips_info_1.json"
+                  , picTips2 = "./ress/pics_tips_info_2.json"
+                  , story = "./ress/story.json"
+                  }
 
 
 -- window start.
 lesson11 :: IO ()
 lesson11 = do
-    jsonWinInfo <- LI.loadWindowInfo $ window infoPaths
+    j <- LP.loadTipsInfo $ picTips infoNames
+    print $ LP.getAlphaColor j
+
+    jsonWinInfo <- LI.loadWindowInfo $ window infoNames
     case jsonWinInfo of
         Nothing   -> EM.putMsg EM.WindowInfo_NotFound
         Just info -> do

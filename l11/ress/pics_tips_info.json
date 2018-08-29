@@ -1,28 +1,25 @@
-{"dots" : { "alpha" : "cyan"
-          , "contents": [ { "red" : { "start_x" : 0
-                                    , "start_y" : 0
-                                    , "size_y" : 100
-                                    , "size_y" : 100
-                                    }
-                          , "yellow" : { "start_x" : 0
-                                       , "start_y" : 0
-                                       , "size_y" : 100
-                                       , "size_y" : 100
-                                       }
-                          }
-                          , "green" : { "start_x" : 0
-                                      , "start_y" : 0
-                                      , "size_y" : 100
-                                      , "size_y" : 100
+{ "dots" : { "alpha" : "cyan"
+           , "contents": { "red" : { "startX" : 0
+                                   , "startY" : 0
+                                   , "sizeX" : 100
+                                   , "sizeY" : 100
+                                   }
+                         , "yellow" : { "startX" : 0
+                                      , "startY" : 0
+                                      , "sizeX" : 100
+                                      , "sizeY" : 100
                                       }
-                          }
-                          , "yellow" : { "start_x" : 0
-                                       , "start_y" : 0
-                                       , "size_y" : 100
-                                       , "size_y" : 100
-                                       }
-                          }
-                        ]
-          }
+                         , "green" : { "startX" : 0
+                                     , "startY" : 0
+                                     , "sizeX" : 100
+                                     , "sizeY" : 100
+                                     }
+                         , "blue" : { "startX" : 0
+                                    , "startY" : 0
+                                    , "sizeX" : 100
+                                    , "sizeY" : 100
+                                    }
+                         }
+           }
 }
 
