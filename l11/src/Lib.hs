@@ -17,37 +17,30 @@ import qualified SdlUtils              as SDL_U
 import qualified SdlUtils_Figure       as SDL_F
 import qualified LoadInfos             as LI
 import qualified LoadPics              as LP
+import qualified LoadDirs              as LD
 import qualified ErrorMessages         as EM
 
 
--- source file path
+type FileName = String
 data InfoDatas a = IData { window  :: a
                          , picTips :: a
-                         , picTips1 :: a
-                         , picTips2 :: a
-                         , story :: a
-                         } deriving (Show)
-type FileName = String
+                         } deriving (Show, Functor)
 infoNames :: InfoDatas FileName
 infoNames = IData { window  = "./ress/window_info.json"
                   , picTips = "./ress/pics_tips_info.json"
-                  , picTips1 = "./ress/pics_tips_info_1.json"
-                  , picTips2 = "./ress/pics_tips_info_2.json"
-                  , story = "./ress/story.json"
                   }
 
 
 -- window start.
 lesson11 :: IO ()
 lesson11 = do
-    j <- LP.loadTipsInfo $ picTips infoNames
-    print $ LP.getAlphaColor j
+    print =<< LD.getCurrDirTree
 
-    jsonWinInfo <- LI.loadWindowInfo $ window infoNames
-    case jsonWinInfo of
-        Nothing   -> EM.putMsg EM.WindowInfo_NotFound
-        Just info -> do
-            SDL_U.begin (LI.restructWindowInfo info) sdlAction
+    --jsonWinInfo <- LI.loadWindowInfo $ window infoNames
+    --case jsonWinInfo of
+    --    Nothing   -> EM.putMsg EM.WindowInfo_NotFound
+    --    Just info -> do
+    --        SDL_U.begin (LI.restructWindowInfo info) sdlAction
 
 sdlAction :: SDL.Window -> IO ()
 sdlAction w = do

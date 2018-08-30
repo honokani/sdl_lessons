@@ -26,10 +26,12 @@ library:
   source-dirs: src
   dependencies:
   - text
-  - sdl2
-  - extra
-  - aeson
   - bytestring
+  - extra
+  - directory
+  - filepath
+  - aeson
+  - sdl2
   - sdl2-image
 
 executables:
