@@ -2,10 +2,11 @@
 {-# LANGUAGE DeriveTraversable #-}
 
 module LoadDirs
-    ( getCurrDirPath
-    , getDirTree
-    , getCurrDirTree
-    ) where
+    --( getCurrDirPath
+    --, getDirTree
+    --, getCurrDirTree
+    --)
+    where
 
 import qualified System.Directory      as SD
 import qualified System.FilePath.Posix as SFP
@@ -13,14 +14,14 @@ import qualified System.FilePath.Posix as SFP
 -- user setting ---------------
 
 data DirStructure a = DStruct { _app :: a
-                              , ress :: a
+                              , res  :: a
                               , pics :: a
                               , tips :: a
                               } deriving (Show, Functor)
 
 dirs :: FilePath -> DirStructure DirMapping
 dirs p = DStruct { _app = Rt p
-                 , ress = Br "ress" $ self _app
+                 , res  = Br "res"  $ self _app
                  , pics = Br "pics" $ self _app
                  , tips = Br "tips" $ self pics
                  }
@@ -29,7 +30,7 @@ dirs p = DStruct { _app = Rt p
 --------------------------------
 
 data DirMapping = Rt FilePath
-                | Br FilePath DirMapping 
+                | Br FilePath DirMapping
                 deriving (Show, Eq)
 
 createDirPath :: DirMapping -> FilePath

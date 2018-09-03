@@ -26,7 +26,7 @@ data InfoDatas a = IData { window  :: a
                          , picTips :: a
                          } deriving (Show, Functor)
 infoNames :: InfoDatas FileName
-infoNames = IData { window  = "./ress/window_info.json"
+infoNames = IData { window  = "window_info.json"
                   , picTips = "./ress/pics_tips_info.json"
                   }
 
@@ -34,9 +34,9 @@ infoNames = IData { window  = "./ress/window_info.json"
 -- window start.
 lesson11 :: IO ()
 lesson11 = do
-    print =<< LD.getCurrDirTree
-
-    --jsonWinInfo <- LI.loadWindowInfo $ window infoNames
+    dirs <-  LD.getCurrDirTree
+    jsonWinInfo <- LI.loadWindowInfo (LD.res dirs) (window infoNames)
+    print jsonWinInfo
     --case jsonWinInfo of
     --    Nothing   -> EM.putMsg EM.WindowInfo_NotFound
     --    Just info -> do

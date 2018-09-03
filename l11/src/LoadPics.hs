@@ -2,15 +2,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module LoadPics
---    ( loadTipsInfo
---    , TipsInfo(..)
---    , DotsInfo(..)
---    )
+    ( getAlphaColor
+    )
     where
 
 import           Foreign.C.Types            (CInt)
 import           Data.ByteString.Lazy.Char8 (pack)
-import           Data.Aeson                 --(decode, FromJSON,parseJSON)
+import           Data.Aeson                 (decode, FromJSON,parseJSON)
 import           Data.Aeson.TH              (deriveJSON, defaultOptions, Options(..))
 import qualified Data.Text                  as T (pack, Text)
 
@@ -49,31 +47,4 @@ loadTipsInfo path = do
 getAlphaColor j = case j of
     (Just i) -> alpha.dots $ i
     Nothing  -> ""
-
-
-
-
-
-
-
---    ( loadWindowInfo
---    , restructWindowInfo
---    ) where
---
---import System.Directory (getCurrentDirectory, getDirectoryContents)
---
---data Exts = PNG
---          | JPG
---          | JPEG
---          | GIF
---          | WEBP
---
---findPictures_Png path = pics
---    where
---        pics = do
---            ls <- getDirectoryContents path
---
---findFiles :: FilePath -> Exts -> [FilePath]
---findFiles p e = do
---    
 
