@@ -15,28 +15,23 @@ import qualified SDL
 -- my module
 import qualified SdlUtils              as SDL_U
 import qualified SdlUtils_Figure       as SDL_F
-import qualified LoadInfos             as LI
-import qualified LoadPics              as LP
+import qualified InfoLoader            as IL
 import qualified LoadDirs              as LD
 import qualified ErrorMessages         as EM
 
 
 type FileName = String
-data InfoDatas a = IData { window  :: a
-                         , picTips :: a
-                         } deriving (Show, Functor)
-infoNames :: InfoDatas FileName
-infoNames = IData { window  = "window_info.json"
-                  , picTips = "./ress/pics_tips_info.json"
-                  }
+infoNames :: IL.Infos FileName
+infoNames = IL.IData { IL.window  = "window_info.json"
+                     , IL.picTips = "pics_tips_info_1.json"
+                     }
 
 
 -- window start.
 lesson11 :: IO ()
 lesson11 = do
     dirs <-  LD.getCurrDirTree
-    jsonWinInfo <- LI.loadWindowInfo (LD.res dirs) (window infoNames)
-    print jsonWinInfo
+    print dirs
     --case jsonWinInfo of
     --    Nothing   -> EM.putMsg EM.WindowInfo_NotFound
     --    Just info -> do

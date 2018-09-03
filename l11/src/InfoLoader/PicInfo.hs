@@ -1,16 +1,17 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module LoadPics
-    ( getAlphaColor
-    )
+module InfoLoader.PicInfo
+    --( getAlphaColor
+    --)
     where
 
-import           Foreign.C.Types            (CInt)
-import           Data.ByteString.Lazy.Char8 (pack)
-import           Data.Aeson                 (decode, FromJSON,parseJSON)
-import           Data.Aeson.TH              (deriveJSON, defaultOptions, Options(..))
-import qualified Data.Text                  as T (pack, Text)
+import           Foreign.C.Types                   (CInt)
+import           Data.ByteString.Lazy.Char8        (pack)
+import           Data.Aeson                        (decode, FromJSON,parseJSON)
+import           Data.Aeson.TH                     (deriveJSON, defaultOptions, Options(..))
+import qualified Data.Text                  as T   (pack, Text)
+import qualified System.FilePath.Posix      as SFP
 
 data TipsInfo = TInfo { dots :: DotsInfo
                       } deriving Show
@@ -39,9 +40,10 @@ deriveJSON defaultOptions ''Contents
 deriveJSON defaultOptions ''TipStatus
 
 
-loadTipsInfo :: FilePath -> IO (Maybe TipsInfo)
-loadTipsInfo path = do
-    f <- readFile path
+type LoadTipsInfo = FilePath -> IO (Maybe TipsInfo)
+loadTipsInfo :: LoadTipsInfo
+loadTipsInfo p = do
+    f <- readFile p
     return.decode.pack $ f
 
 getAlphaColor j = case j of

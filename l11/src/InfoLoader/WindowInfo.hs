@@ -1,10 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module LoadInfos
-    ( loadWindowInfo
-    , restructWindowInfo
-    ) where
+module InfoLoader.WindowInfo
+    --( loadWindowInfo
+    --, restructWindowInfo
+    --)
+    where
 
 import           Foreign.C.Types                   (CInt)
 import           Data.ByteString.Lazy.Char8        (pack)
@@ -20,9 +21,10 @@ data WindowInfo = WinInfo { winTitle :: String
 deriveJSON defaultOptions ''WindowInfo
 
 
-loadWindowInfo :: FilePath -> FilePath -> IO (Maybe WindowInfo)
-loadWindowInfo p n = do
-    fWinInfo <- readFile $ SFP.joinPath [p,n]
+type LoadWindowInfo = FilePath -> IO (Maybe WindowInfo)
+loadWindowInfo :: LoadWindowInfo
+loadWindowInfo p = do
+    fWinInfo <- readFile p
     return.decode.pack $ fWinInfo
 
 restructWindowInfo :: WindowInfo -> (T.Text,(CInt,CInt))
