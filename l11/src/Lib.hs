@@ -28,33 +28,30 @@ infoNames = IL.IFs { IL.window  = "window_info.json"
 -- window start.
 lesson11 :: IO ()
 lesson11 = do
-    dirs <-  LD.getCurrDirTree
-    infos <- IL.loadInfoAll (LD.res dirs) infoNames
-    print $ IL.picTips infos
+    infos <- IL.loadInfoAll infoNames =<< LD.res <$> LD.getCurrDirTree
     case IL.window infos of
-        (IL.JW i) -> do
-            SDL_U.begin (IL.restructWindowInfo i) (sdlAction infos)
-        otherwise -> EM.putMsg EM.WindowInfo_NotFound
+        (IL.JRW i) -> SDL_U.begin (IL.restructWindowInfo i) (sdlAction infos)
+        otherwise  -> EM.putMsg EM.WindowInfo_NotFound
 
 
 sdlAction :: IL.Infos IL.JRecords -> SDL.Window -> IO ()
-sdlAction infos w = do
-    useRenderer w $ \r -> do
-        -- ts <- SDL_F.loadTexturesWithCKey r cyn sfmap
-        SDL_U.runUntil_X $ draw r --ts
-        -- SDL_F.destroyTextures ts
+sdlAction infos = useRenderer actionCore
     where
-        useRenderer win act = do
+        useRenderer act win = do
             r <- SDL.createRenderer win (-1) rendererConfig
             act r
             SDL.destroyRenderer r
+        rType = SDL.AcceleratedVSyncRenderer
         rendererConfig :: SDL.RendererConfig
-        rendererConfig = SDL.RendererConfig
-            { SDL.rendererType = SDL.AcceleratedVSyncRenderer
-            , SDL.rendererTargetTexture = False
-            }
+        rendererConfig = SDL.RendererConfig { SDL.rendererType = rType
+                                            , SDL.rendererTargetTexture = False
+                                            }
+        actionCore = \r -> do
+            -- ts <- SDL_F.loadTexturesWithCKey r cyn sfmap
+            SDL_U.runUntil_X $ draw r --ts
+            -- SDL_F.destroyTextures ts
 
--- core action
+
 --draw :: SDL.Renderer -> SurfaceMap SDL.Texture -> IO ()
 draw :: SDL.Renderer -> IO ()
 draw r = do

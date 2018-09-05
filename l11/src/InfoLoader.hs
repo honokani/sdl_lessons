@@ -18,43 +18,40 @@ data Infos a = IFs { window  :: a
                    , picTips :: a
                    } deriving (Show, Functor, Foldable, Traversable)
 
-data JRecords = Faild
-                 | JT IP.TipsInfo
-                 | JW IW.WindowInfo
-                 deriving (Show)
+data JRecords = Failed
+              | JRW IW.WindowInfo
+              | JRT IP.TipsInfo
+              deriving (Show)
 
-class RecordContainer a where
+class JRecordContainer a where
     conv :: a -> JRecords
     get :: JRecords -> a
-instance RecordContainer IW.WindowInfo where
-    conv = JW
-    get jr = case jr of (JW x) -> x
-instance RecordContainer IP.TipsInfo where
-    conv = JT
-    get jr = case jr of (JT x) -> x
-
-getWin :: Infos JRecords -> IW.WindowInfo
-getWin = get.window
+instance JRecordContainer IW.WindowInfo where
+    conv = JRW
+    get r = case r of (JRW x) -> x
+instance JRecordContainer IP.TipsInfo where
+    conv = JRT
+    get r = case r of (JRT x) -> x
 
 infoLoaders :: Infos (FilePath -> IO JRecords)
-infoLoaders = IFs { window  = setLoader $ IW.loadWindowInfo
-                  , picTips = setLoader $ IP.loadTipsInfo
+infoLoaders = IFs { window  = setLoader IW.loadWindowInfo
+                  , picTips = setLoader IP.loadTipsInfo
                   }
     where
         setLoader tgt = \p -> do
             t <- tgt p
             case t of
-                Nothing  -> return Faild
+                Nothing  -> return Failed
                 (Just i) -> return $ conv i
 
 -------------------------------------------------------
 
 type FileName = String
-loadInfoAll :: FilePath -> Infos FileName -> IO (Infos JRecords)
-loadInfoAll dirp fnames = zipWithTFM run infoLoaders ps
+loadInfoAll :: Infos FileName -> FilePath -> IO (Infos JRecords)
+loadInfoAll fnames dirPath = zipWithTFM run infoLoaders ps
     where
         ps :: Infos FilePath
-        ps = fmap (\x -> SFP.joinPath [dirp,x]) fnames
+        ps = fmap (\x -> SFP.joinPath [dirPath,x]) fnames
         run :: (FilePath -> IO JRecords) -> FilePath -> IO JRecords
         run loader p = loader p
 
