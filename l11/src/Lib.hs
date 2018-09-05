@@ -7,11 +7,11 @@ module Lib
     ( lesson11
     ) where
 
+-- common
+--import qualified System.FilePath.Posix as SFP
 -- for sdl
 import           Foreign.C.Types                (CInt)
 import qualified SDL
--- common
---import qualified System.FilePath.Posix as SFP
 -- my module
 import qualified SdlUtils              as SDL_U
 import qualified SdlUtils_Figure       as SDL_F
@@ -20,25 +20,25 @@ import qualified LoadDirs              as LD
 import qualified ErrorMessages         as EM
 
 
-type FileName = String
-infoNames :: IL.Infos FileName
-infoNames = IL.IData { IL.window  = "window_info.json"
-                     , IL.picTips = "pics_tips_info_1.json"
-                     }
-
+infoNames :: IL.Infos String
+infoNames = IL.IFs { IL.window  = "window_info.json"
+                   , IL.picTips = "pics_tips_info.json"
+                   }
 
 -- window start.
 lesson11 :: IO ()
 lesson11 = do
     dirs <-  LD.getCurrDirTree
-    print dirs
-    --case jsonWinInfo of
-    --    Nothing   -> EM.putMsg EM.WindowInfo_NotFound
-    --    Just info -> do
-    --        SDL_U.begin (LI.restructWindowInfo info) sdlAction
+    infos <- IL.loadInfoAll (LD.res dirs) infoNames
+    print $ IL.picTips infos
+    case IL.window infos of
+        (IL.JW i) -> do
+            SDL_U.begin (IL.restructWindowInfo i) (sdlAction infos)
+        otherwise -> EM.putMsg EM.WindowInfo_NotFound
 
-sdlAction :: SDL.Window -> IO ()
-sdlAction w = do
+
+sdlAction :: IL.Infos IL.JRecords -> SDL.Window -> IO ()
+sdlAction infos w = do
     useRenderer w $ \r -> do
         -- ts <- SDL_F.loadTexturesWithCKey r cyn sfmap
         SDL_U.runUntil_X $ draw r --ts

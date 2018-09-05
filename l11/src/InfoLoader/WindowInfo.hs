@@ -2,9 +2,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module InfoLoader.WindowInfo
-    --( loadWindowInfo
-    --, restructWindowInfo
-    --)
+    ( WindowInfo(..)
+    , loadWindowInfo
+    , restructWindowInfo
+    )
     where
 
 import           Foreign.C.Types                   (CInt)
@@ -13,6 +14,7 @@ import           Data.Aeson                        (decode)
 import           Data.Aeson.TH                     (deriveJSON, defaultOptions, Options(..))
 import qualified Data.Text                  as T   (pack, Text)
 import qualified System.FilePath.Posix      as SFP
+-- my module
 
 data WindowInfo = WinInfo { winTitle :: String
                           , winSizeW :: Int
@@ -20,9 +22,7 @@ data WindowInfo = WinInfo { winTitle :: String
                           } deriving Show
 deriveJSON defaultOptions ''WindowInfo
 
-
-type LoadWindowInfo = FilePath -> IO (Maybe WindowInfo)
-loadWindowInfo :: LoadWindowInfo
+loadWindowInfo :: FilePath -> IO (Maybe WindowInfo)
 loadWindowInfo p = do
     fWinInfo <- readFile p
     return.decode.pack $ fWinInfo

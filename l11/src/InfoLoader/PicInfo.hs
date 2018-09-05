@@ -1,9 +1,13 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveFoldable #-}
+{-# LANGUAGE DeriveTraversable #-}
 
 module InfoLoader.PicInfo
-    --( getAlphaColor
-    --)
+    ( TipsInfo(..)
+    , loadTipsInfo
+    , getAlphaColor
+    )
     where
 
 import           Foreign.C.Types                   (CInt)
@@ -12,17 +16,19 @@ import           Data.Aeson                        (decode, FromJSON,parseJSON)
 import           Data.Aeson.TH                     (deriveJSON, defaultOptions, Options(..))
 import qualified Data.Text                  as T   (pack, Text)
 import qualified System.FilePath.Posix      as SFP
+-- my module
 
-data TipsInfo = TInfo { dots :: DotsInfo
+data TipsInfo = TInfo { dots :: DotsInfo String
                       } deriving Show
-data DotsInfo = DInfo { alpha    :: String
-                      , contents :: Contents
-                      } deriving Show
-data Contents = Cons { red    :: TipStatus
-                     , yellow :: TipStatus
-                     , green  :: TipStatus
-                     , blue   :: TipStatus
-                     } deriving Show
+data DotsInfo a = DInfo { target  :: a
+                        , alpha   :: String
+                        , details :: Details
+                        } deriving Show
+data Details = Det { red    :: TipStatus
+                   , yellow :: TipStatus
+                   , green  :: TipStatus
+                   , blue   :: TipStatus
+                   } deriving Show
 data TipStatus = TStat { startX :: Int
                        , startY :: Int
                        , sizeX  :: Int
@@ -36,12 +42,10 @@ deriveJSON defaultOptions ''TipsInfo
 --        dotsAlpha <- dotsO .: "alpha"
 --        return $ TInfo dotsAlpha
 deriveJSON defaultOptions ''DotsInfo
-deriveJSON defaultOptions ''Contents
+deriveJSON defaultOptions ''Details
 deriveJSON defaultOptions ''TipStatus
 
-
-type LoadTipsInfo = FilePath -> IO (Maybe TipsInfo)
-loadTipsInfo :: LoadTipsInfo
+loadTipsInfo :: FilePath -> IO (Maybe TipsInfo )
 loadTipsInfo p = do
     f <- readFile p
     return.decode.pack $ f

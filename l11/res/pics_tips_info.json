@@ -1,25 +1,26 @@
-{ "dots" : { "alpha" : "cyan"
-           , "contents": { "red" : { "startX" : 0
+{ "dots" : { "target" : "dots.png"
+           , "alpha" : "cyan"
+           , "details": { "red" : { "startX" : 0
+                                , "startY" : 0
+                                , "sizeX" : 100
+                                , "sizeY" : 100
+                                }
+                      , "yellow" : { "startX" : 0
                                    , "startY" : 0
                                    , "sizeX" : 100
                                    , "sizeY" : 100
                                    }
-                         , "yellow" : { "startX" : 0
-                                      , "startY" : 0
-                                      , "sizeX" : 100
-                                      , "sizeY" : 100
-                                      }
-                         , "green" : { "startX" : 0
-                                     , "startY" : 0
-                                     , "sizeX" : 100
-                                     , "sizeY" : 100
-                                     }
-                         , "blue" : { "startX" : 0
-                                    , "startY" : 0
-                                    , "sizeX" : 100
-                                    , "sizeY" : 100
-                                    }
-                         }
+                      , "green" : { "startX" : 0
+                                  , "startY" : 0
+                                  , "sizeX" : 100
+                                  , "sizeY" : 100
+                                  }
+                      , "blue" : { "startX" : 0
+                                 , "startY" : 0
+                                 , "sizeX" : 100
+                                 , "sizeY" : 100
+                                 }
+                      }
            }
 }
 

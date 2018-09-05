@@ -1,74 +1,94 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveTraversable #-}
-{-# LANGUAGE ExistentialQuantification #-}
 
 module InfoLoader
     --( lesson11
     --)
     where
-
---import           Data.Traversable
+-- common
+import           Prelude               hiding (sequence)
+import           Data.Foldable
+import           Data.Traversable
+import qualified System.FilePath.Posix as SFP
 -- my module
-import qualified LoadDirs              as LD
-import qualified InfoLoader.WindowInfo as IW
 import qualified InfoLoader.PicInfo    as IP
-import qualified System.FilePath.Posix      as SFP
+import qualified InfoLoader.WindowInfo as IW
 
-data Infos a = IData { window  :: a
-                     , picTips :: a
-                     } deriving (Show, Functor, Foldable, Traversable)
+data Infos a = IFs { window  :: a
+                   , picTips :: a
+                   } deriving (Show, Functor, Foldable, Traversable)
 
-data InfoTypes = WinInfo { winTitle :: String
-                         , winSizeW :: Int
-                         , winSizeH :: Int
-                         } deriving Show
+data JRecords = Faild
+                 | JT IP.TipsInfo
+                 | JW IW.WindowInfo
+                 deriving (Show)
+
+class RecordContainer a where
+    conv :: a -> JRecords
+    get :: JRecords -> a
+instance RecordContainer IW.WindowInfo where
+    conv = JW
+    get jr = case jr of (JW x) -> x
+instance RecordContainer IP.TipsInfo where
+    conv = JT
+    get jr = case jr of (JT x) -> x
+
+getWin :: Infos JRecords -> IW.WindowInfo
+getWin = get.window
+
+infoLoaders :: Infos (FilePath -> IO JRecords)
+infoLoaders = IFs { window  = setLoader $ IW.loadWindowInfo
+                  , picTips = setLoader $ IP.loadTipsInfo
+                  }
+    where
+        setLoader tgt = \p -> do
+            t <- tgt p
+            case t of
+                Nothing  -> return Faild
+                (Just i) -> return $ conv i
+
+-------------------------------------------------------
+
+type FileName = String
+loadInfoAll :: FilePath -> Infos FileName -> IO (Infos JRecords)
+loadInfoAll dirp fnames = zipWithTFM run infoLoaders ps
+    where
+        ps :: Infos FilePath
+        ps = fmap (\x -> SFP.joinPath [dirp,x]) fnames
+        run :: (FilePath -> IO JRecords) -> FilePath -> IO JRecords
+        run loader p = loader p
+
+restructWindowInfo = IW.restructWindowInfo 
 
 
---type FileName = String
---load :: FilePath -> IData FileName -> IData 
---load p = mapM $ IW.loadWindowInfo p
-
-zipWithTF f t1 t2 = traverse (\x -> traverse (\y -> uncurry f (x,y)) t2 ) t1
-zipTF t1 t2 = zipWithTF (\x y -> (x,y))
 
 
 
-iN = IData { window  = "window_info.json"
-           , picTips = "pics_tips_info_1.json"
-           }
-data LoadKind = KW IW.LoadWindowInfo
-              | KP IP.LoadTipsInfo
---fN = IData { window  = IW.loadWindowInfo
---           , picTips = IP.loadTipsInfo
---           }
+-----------------------------------------------------------------------
+-- Sourced By https://wiki.haskell.org/Foldable_and_Traversable
+data Supply s v = Supply { unSupply :: [s] -> ([s],v) }
 
-fN_ :: Infos (FilePath -> IO JsonRecord)
-fN_ = IData { window  = lowin
-            , picTips = lotip
-            }
-lowin p = do
-    t <- IW.loadWindowInfo p
-    case t of
-        Nothing  -> return Faild
-        (Just i) -> return (JW i)
+instance Functor (Supply s) where 
+    fmap f av = Supply (\l -> let (l',v) = unSupply av l in (l',f v))
 
-lotip p = do
-    t <- IP.loadTipsInfo p
-    case t of
-        Nothing  -> return Faild
-        (Just i) -> return (JT i)
+instance Applicative (Supply s) where
+    pure v    = Supply (\l -> (l,v))
+    af <*> av = Supply (\l -> let (l',f)  = unSupply af l
+                                  (l'',v) = unSupply av l'
+                              in (l'',f v))
 
+runSupply :: (Supply s v) -> [s] -> v
+runSupply av l = snd $ unSupply av l
 
---loadInfoAll dirp fnames = zipWithTF run fN ps
---    where
---        ps = fmap (\x -> SFP.joinPath [dirp,x]) fnames
---        run loader p = case loader of
---            KW f -> f p
---            KP f -> f p
+supply :: Supply s s
+supply = Supply (\(x:xs) -> (xs,x))
 
-data JsonRecord = JW IW.WindowInfo
-                | JT IP.TipsInfo
-                | Faild
+zipTF :: (Traversable t, Foldable f) => t a -> f b -> t (a,b)
+zipTF t f = runSupply (traverse (\a -> (,) a <$> supply) t) (toList f)
 
+zipWithTF :: (Traversable t,Foldable f) => (a -> b -> c) -> t a -> f b -> t c
+zipWithTF g t f = runSupply  (traverse (\a -> g a <$> supply) t) (toList f)
+
+zipWithTFM :: (Traversable t,Foldable f,Monad m) => (a -> b -> m c) -> t a -> f b -> m (t c)
+zipWithTFM g t f = sequence (zipWithTF g t f)
 
