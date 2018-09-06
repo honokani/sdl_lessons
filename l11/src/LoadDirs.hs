@@ -50,4 +50,8 @@ getCurrDirPath = SD.getCurrentDirectory
 getCurrDirTree :: IO (DirStructure FilePath)
 getCurrDirTree = getDirTree <$> getCurrDirPath
 
+-----------------------------------------------  
+
+getResourceDir :: IO FilePath
+getResourceDir = res <$> getCurrDirTree
 

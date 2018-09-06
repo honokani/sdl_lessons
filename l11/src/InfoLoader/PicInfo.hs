@@ -4,9 +4,10 @@
 {-# LANGUAGE DeriveTraversable #-}
 
 module InfoLoader.PicInfo
-    ( TipsInfo(..)
+    ( TipsetsInfo(..)
+    , TipsInfo(..)
     , loadTipsInfo
-    , getAlphaColor
+    , getParams
     )
     where
 
@@ -18,39 +19,37 @@ import qualified Data.Text                  as T   (pack, Text)
 import qualified System.FilePath.Posix      as SFP
 -- my module
 
-data TipsInfo = TInfo { dots :: DotsInfo String
-                      } deriving Show
-data DotsInfo a = DInfo { target  :: a
+newtype TipsetsInfo = TSInfo { tipsets :: [TipsInfo String]
+                             } deriving Show
+data TipsInfo a = TInfo { target  :: a
                         , alpha   :: String
-                        , details :: Details
+                        , details :: Contents Params
                         } deriving Show
-data Details = Det { red    :: TipStatus
-                   , yellow :: TipStatus
-                   , green  :: TipStatus
-                   , blue   :: TipStatus
-                   } deriving Show
-data TipStatus = TStat { startX :: Int
-                       , startY :: Int
-                       , sizeX  :: Int
-                       , sizeY  :: Int
-                       } deriving Show
+data Contents a = Con { red    :: a
+                      , yellow :: a
+                      , green  :: a
+                      , blue   :: a
+                      } deriving (Show, Functor, Foldable, Traversable)
+data Params = Prm { baseX :: Int
+                  , baseY :: Int
+                  , sizeX  :: Int
+                  , sizeY  :: Int
+                  } deriving Show
 
-deriveJSON defaultOptions ''TipsInfo
---instance FromJSON TipsInfo where
+deriveJSON defaultOptions ''TipsetsInfo
+--instance FromJSON TipsetsInfo where
 --    parseJSON (Object j) = do
 --        dotsO <- j .: "dots"
 --        dotsAlpha <- dotsO .: "alpha"
---        return $ TInfo dotsAlpha
-deriveJSON defaultOptions ''DotsInfo
-deriveJSON defaultOptions ''Details
-deriveJSON defaultOptions ''TipStatus
+--        return $ TSInfo dotsAlpha
+deriveJSON defaultOptions ''TipsInfo
+deriveJSON defaultOptions ''Contents
+deriveJSON defaultOptions ''Params
 
-loadTipsInfo :: FilePath -> IO (Maybe TipsInfo )
+loadTipsInfo :: FilePath -> IO (Maybe TipsetsInfo)
 loadTipsInfo p = do
     f <- readFile p
     return.decode.pack $ f
 
-getAlphaColor j = case j of
-    (Just i) -> alpha.dots $ i
-    Nothing  -> ""
+getParams (Prm bx by sx sy) = (bx,by,sx,sy)
 

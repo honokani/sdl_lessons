@@ -20,7 +20,7 @@ data Infos a = IFs { window  :: a
 
 data JRecords = Failed
               | JRW IW.WindowInfo
-              | JRT IP.TipsInfo
+              | JRT IP.TipsetsInfo
               deriving (Show)
 
 class JRecordContainer a where
@@ -29,7 +29,7 @@ class JRecordContainer a where
 instance JRecordContainer IW.WindowInfo where
     conv = JRW
     get r = case r of (JRW x) -> x
-instance JRecordContainer IP.TipsInfo where
+instance JRecordContainer IP.TipsetsInfo where
     conv = JRT
     get r = case r of (JRT x) -> x
 
@@ -38,7 +38,7 @@ infoLoaders = IFs { window  = setLoader IW.loadWindowInfo
                   , picTips = setLoader IP.loadTipsInfo
                   }
     where
-        setLoader tgt = \p -> do
+        setLoader tgt p = do
             t <- tgt p
             case t of
                 Nothing  -> return Failed
@@ -53,11 +53,16 @@ loadInfoAll fnames dirPath = zipWithTFM run infoLoaders ps
         ps :: Infos FilePath
         ps = fmap (\x -> SFP.joinPath [dirPath,x]) fnames
         run :: (FilePath -> IO JRecords) -> FilePath -> IO JRecords
-        run loader p = loader p
+        run loader = loader
 
+-- window info
 restructWindowInfo = IW.restructWindowInfo 
-
-
+-- pictips info
+getTarget  = IP.target
+getTipsets = IP.tipsets
+getAlpha   = IP.alpha
+getDetails = IP.details
+getParams  = IP.getParams
 
 
 

@@ -28,6 +28,7 @@ library:
   - text
   - bytestring
   - extra
+  - containers
   - directory
   - filepath
   - aeson
