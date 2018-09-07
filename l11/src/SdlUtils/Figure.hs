@@ -9,6 +9,7 @@ module SdlUtils.Figure
     , destroyTextures
     , loadTextureWithCKey
     , loadTexturesWithCKey
+    , renderTextureTip
     ) where
 
 -- common
@@ -31,8 +32,11 @@ clearCanvas r = do
 fillRect :: SDL.Renderer -> SDL.Rectangle CInt -> IO ()
 fillRect r s = SDL.fillRect r $ Just s
 
-mkRect :: a -> a -> a -> a -> SDL.Rectangle a
-mkRect x y w h = SDL.Rectangle (SDL.P $ SDL.V2 x y) $ SDL.V2 w h
+mkRect :: (Integral a) => a -> a -> a -> a -> SDL.Rectangle CInt
+mkRect x y w h = fromIntegral <$> SDL.Rectangle basePos tSize
+    where
+        basePos = SDL.P $ SDL.V2 x y
+        tSize = SDL.V2 w h
 
 setViewport :: SDL.Renderer ->  SDL.Rectangle CInt -> IO ()
 setViewport r sc = SDL.rendererViewport r $= Just sc
@@ -53,7 +57,6 @@ destroyTextures = mapM_ SDL.destroyTexture
 loadSurfaces :: (Traversable m) => m FilePath -> IO (m SDL.Surface)
 loadSurfaces = mapM SDL_I.load
 
-
 loadTextureWithCKey :: SDL.Renderer -> SDL_C.Color -> FilePath -> IO (SDL.Texture)
 loadTextureWithCKey r key fp = do
     sfc <- SDL_I.load fp
@@ -61,6 +64,8 @@ loadTextureWithCKey r key fp = do
     SDL.createTextureFromSurface r sfc
 
 loadTexturesWithCKey :: (Traversable m) => SDL.Renderer -> SDL_C.Color -> m FilePath -> IO (m SDL.Texture)
-loadTexturesWithCKey r k fps = do
-    mapM (loadTextureWithCKey r k) fps
+loadTexturesWithCKey r k fps = mapM (loadTextureWithCKey r k) fps
+
+renderTextureTip :: SDL.Renderer -> SDL.Rectangle CInt -> SDL.Texture -> SDL.Rectangle CInt -> IO ()
+renderTextureTip ren area tex mask = SDL.copy ren tex (Just mask) (Just area)
 

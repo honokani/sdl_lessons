@@ -55,3 +55,6 @@ getCurrDirTree = getDirTree <$> getCurrDirPath
 getResourceDir :: IO FilePath
 getResourceDir = res <$> getCurrDirTree
 
+getPictipsDir :: IO FilePath
+getPictipsDir = tips <$> getCurrDirTree
+

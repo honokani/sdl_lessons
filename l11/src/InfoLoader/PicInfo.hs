@@ -6,6 +6,7 @@
 module InfoLoader.PicInfo
     ( TipsetsInfo(..)
     , TipsInfo(..)
+    , Contents(..)
     , loadTipsInfo
     , getParams
     )
@@ -19,12 +20,12 @@ import qualified Data.Text                  as T   (pack, Text)
 import qualified System.FilePath.Posix      as SFP
 -- my module
 
-newtype TipsetsInfo = TSInfo { tipsets :: [TipsInfo String]
-                             } deriving Show
-data TipsInfo a = TInfo { target  :: a
-                        , alpha   :: String
-                        , details :: Contents Params
-                        } deriving Show
+data TipsetsInfo = TSInfo { dotset :: TipsInfo String (Contents Params)
+                          } deriving (Show)
+data TipsInfo a b = TInfo { target   :: a
+                          , alpha    :: String
+                          , contents :: b
+                          } deriving Show
 data Contents a = Con { red    :: a
                       , yellow :: a
                       , green  :: a

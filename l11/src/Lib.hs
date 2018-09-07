@@ -5,10 +5,10 @@ module Lib
     ) where
 
 -- common
---import qualified System.FilePath.Posix as SFP
 import           Control.Monad                  (forM)
 import           Data.Foldable
 import           Data.Traversable
+import qualified System.FilePath.Posix as SFP
 -- for sdl
 import           Foreign.C.Types                (CInt)
 import qualified SDL
@@ -18,7 +18,7 @@ import qualified SdlUtils.Figure       as SDL_F
 import qualified SdlUtils.Color        as SDL_C
 import qualified InfoLoader            as IL
 import qualified LoadDirs              as LD
-import qualified Lib.ErrorMessages         as EM
+import qualified Lib.ErrorMessages     as EM
 
 
 infoNames :: IL.Infos String
@@ -30,7 +30,6 @@ infoNames = IL.IFs { IL.window  = "window_info.json"
 lesson11 :: IO ()
 lesson11 = do
     infos <- IL.loadInfoAll infoNames =<< LD.getResourceDir
-    --extendJRecord infos
     case IL.window infos of
         (IL.JRW i) -> SDL_U.begin (IL.restructWindowInfo i) (sdlAction infos)
         _          -> EM.putMsg EM.WindowInfo_NotFound
@@ -45,44 +44,62 @@ sdlAction infos = useRenderer actionCore
             SDL.destroyRenderer r
             where
                 rType = SDL.AcceleratedVSyncRenderer
-                rendererConfig :: SDL.RendererConfig
                 rendererConfig = SDL.RendererConfig { SDL.rendererType = rType
                                                     , SDL.rendererTargetTexture = False
                                                     }
         actionCore r = do
-            loadTextures r infos
-            --print $ ts
-            -- SDL_U.runUntil_X $ draw r --ts
-            -- SDL_F.destroyTextures ts
+            ts <- loadTextures r jp
+            SDL_U.runUntil_X $ draw r jw ts
+            releaseTextures ts
+            where
+                (IL.IFs jw jp) = infos
 
-loadTextures r (IL.IFs jw jp) = case jp of
-    (IL.JRT pInfo) -> do
-        n <- forM (IL.getTipsets pInfo) $ \x -> do
-            let tips = fmap (splitToTip (load x).IL.getParams) (IL.getDetails x)
-            return $ tips
-        return $ n
+loadTextures r (IL.JRT pInfo) = do
+    let x = IL.getDotset pInfo
+    tipsPath <- LD.getPictipsDir
+    pic <- load tipsPath x
+    let tipsRenderer = fmap (splitToTip pic.IL.getParams) (IL.getContents x)
+    return $ IL.mkTInfo pic (IL.getAlpha x) tipsRenderer
     where
-        load x = SDL_F.loadTextureWithCKey r (cKey x) (path x)
+        load p x = SDL_F.loadTextureWithCKey r (cKey x) (SFP.joinPath [p,path x])
             where
                 cKey = SDL_C.get.IL.getAlpha
                 path = IL.getTarget
-        splitToTip pic (bx,by,sx,sy) = SDL.Rectangle (SDL.P bs) sz
+        splitToTip tex (bx,by,sx,sy) = \ren area -> SDL_F.renderTextureTip ren area tex mask
             where
-                bs = SDL.V2 bx by
-                sz = SDL.V2 sx sy
+                mask = SDL_F.mkRect bx by sx sy
 
+releaseTextures = SDL.destroyTexture.IL.getTarget
 
 
 --draw :: SDL.Renderer -> SurfaceMap SDL.Texture -> IO ()
-draw :: SDL.Renderer -> IO ()
-draw r = do
-    SDL.delay 1
-    SDL_F.clearCanvas r
-    -- start
-    SDL_F.setViewport r full
-    SDL_F.fillArea r (SDL_C.get "red") full
-    -- end
-    SDL.present r
+--draw :: SDL.Renderer -> IO ()
+draw r (IL.JRW jw) tips = do
+    initiarize
+    visualizeBackGround
+    visualizeDots
     where
-        full = SDL_F.mkRect 0 0 300 300
+        wW = IL.winSzW jw
+        wH = IL.winSzH jw
+        dotSize = 60
+        full = SDL_F.mkRect 0 0 wW wH
+        -- acts
+        initiarize = do
+            SDL.present r
+            SDL.delay 1
+            SDL_F.clearCanvas r
+        visualizeBackGround = do
+            SDL_F.setViewport r full
+            SDL_F.fillArea r (SDL_C.get "white") full
+        visualizeDots = do
+            IL.red    tipCons r upL
+            IL.green  tipCons r upR
+            IL.yellow tipCons r dnL
+            IL.blue   tipCons r dnR
+            where
+                upL = SDL_F.mkRect 0 0 dotSize dotSize
+                upR = SDL_F.mkRect (wW - dotSize) 0 dotSize dotSize
+                dnL = SDL_F.mkRect 0 (wH - dotSize) dotSize dotSize
+                dnR = SDL_F.mkRect (wW - dotSize) (wH - dotSize) dotSize dotSize
+                tipCons = IL.getContents tips
 

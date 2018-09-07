@@ -57,13 +57,19 @@ loadInfoAll fnames dirPath = zipWithTFM run infoLoaders ps
 
 -- window info
 restructWindowInfo = IW.restructWindowInfo 
+winSzW = IW.winSizeW
+winSzH = IW.winSizeH
 -- pictips info
-getTarget  = IP.target
-getTipsets = IP.tipsets
-getAlpha   = IP.alpha
-getDetails = IP.details
-getParams  = IP.getParams
-
+getDotset  = IP.dotset
+getTarget   = IP.target
+getAlpha    = IP.alpha
+getContents = IP.contents
+getParams   = IP.getParams
+mkTInfo   = IP.TInfo
+red = IP.red
+yellow = IP.yellow
+blue = IP.blue
+green = IP.green
 
 
 -----------------------------------------------------------------------
