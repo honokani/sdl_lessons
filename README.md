@@ -20,7 +20,7 @@
             by using aeson and json.  
             And, infomation of setting for picture tips, too.  
          +  However, I know this App is too complex.  
-            So, I'll make it loosen.
+            So, I'll make it simple.  
 
    - log  
       *  lesson01  
